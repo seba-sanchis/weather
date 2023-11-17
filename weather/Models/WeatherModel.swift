@@ -7,10 +7,8 @@
 
 import Foundation
 
-struct Weather: Decodable, Identifiable {
-    let id: Int
-    let main: String
-    let description: String
+struct Location: Decodable {
+    let country: String
 }
 
 struct Temperature: Decodable {
@@ -19,7 +17,15 @@ struct Temperature: Decodable {
     let temp_max: Double
 }
 
+struct Weather: Decodable, Identifiable {
+    let id: Int
+    let main: String
+    let description: String
+}
+
 struct WeatherResponse: Decodable {
-    let weather: [Weather]
+    let sys: Location
+    let name: String
     let main: Temperature
+    let weather: [Weather]
 }

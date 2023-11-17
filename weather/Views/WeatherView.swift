@@ -17,39 +17,48 @@ struct WeatherView: View {
                 .fill(Color.blue.gradient)
                 .ignoresSafeArea()
             
-            VStack (spacing: 48) {
-                Text("San Francisco, CA")
+            VStack (spacing: 32) {
+                Text("\(viewModel.city ?? ""), \(viewModel.country?.country ?? "")")
                     .font(.system(size: 32, weight: .semibold))
                     .foregroundColor(.white)
-                    .padding()
                 
                 VStack {
                     Image(systemName: WeatherIcon(rawValue: viewModel.weather.first?.main ?? "").rawValue)
                         .renderingMode(.original)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 192)
+                        .frame(width: 192, height: 192)
                     
-                    Text("\(viewModel.temperature?.temp ?? 0)°")
+                    Text(String(format: "%.2f°", viewModel.temperature?.temp ?? 0))
                         .font(.system(size: 56))
                         .foregroundColor(.white)
                     
-                    Text("\(viewModel.weather.first?.description ?? "")")
+                    Text("\(viewModel.weather.first?.description.capitalized ?? "")")
                         .font(.system(size: 32))
                         .foregroundColor(.white)
                     
+                    HStack {
+                        Text("H: \(String(format: "%.2f", viewModel.temperature?.temp_max ?? 0))°")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                        
+                        Text("L: \(String(format: "%.2f", viewModel.temperature?.temp_min ?? 0))°")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                    }
                 }
+                .padding(.bottom)
                 
                 HStack (spacing: 16) {
-                    WeatherDayView(dayOfWeek: "Mon", imageName: "cloud.sun.fill", temperature: 72)
+                    WeatherDayView(dayOfWeek: "Mon", imageName: "cloud.sun.fill", temperature: 25)
                     
-                    WeatherDayView(dayOfWeek: "Tue", imageName: "cloud.fill", temperature: 64)
+                    WeatherDayView(dayOfWeek: "Tue", imageName: "cloud.fill", temperature: 23)
                     
-                    WeatherDayView(dayOfWeek: "Wed", imageName: "cloud.sun.rain.fill", temperature: 48)
+                    WeatherDayView(dayOfWeek: "Wed", imageName: "cloud.sun.rain.fill", temperature: 19)
                     
-                    WeatherDayView(dayOfWeek: "Thu", imageName: "wind", temperature: 56)
+                    WeatherDayView(dayOfWeek: "Thu", imageName: "wind", temperature: 21)
                     
-                    WeatherDayView(dayOfWeek: "Fri", imageName: "sun.max.fill", temperature: 80)
+                    WeatherDayView(dayOfWeek: "Fri", imageName: "sun.max.fill", temperature: 27)
                 }
                 .padding()
                 .background(Color.black.opacity(0.1))
@@ -67,16 +76,28 @@ struct WeatherView: View {
 }
 
 enum WeatherIcon: String {
-    case rain = "cloud.rain.fill"
+    case clear = "sun.max.fill"
     case clouds = "cloud.fill"
-    case unknown = "questionmark.circle.fill"
+    case drizzle = "cloud.drizzle.fill"
+    case rain = "cloud.rain.fill"
+    case snow = "snowflake"
+    case thunderstorm = "cloud.bolt.rain.fill"
+    case unknown = "questionmark"
 
     init(rawValue: String) {
         switch rawValue {
+        case "Clear":
+            self = .clear
         case "Clouds":
             self = .clouds
+        case "Drizzle":
+            self = .drizzle
         case "Rain":
             self = .rain
+        case "Snow":
+            self = .snow
+        case "Thunderstorm":
+            self = .thunderstorm
         default:
             self = .unknown
         }

@@ -9,8 +9,11 @@ import SwiftUI
 
 final class WeatherViewModel: ObservableObject {
     
-    @Published var weather: [Weather] = []
+    @Published var city: String?
+    @Published var country: Location?
     @Published var temperature: Temperature?
+    @Published var weather: [Weather] = []
+    
     @Published var isLoading = false
     
     @MainActor
@@ -22,8 +25,11 @@ final class WeatherViewModel: ObservableObject {
                 let response = try await APIService.shared.getWeather()
                 
                 // Perform UI updates directly (no need for additional Task) because of @MainActor
-                self.weather = response.weather
+                self.city = response.name
+                self.country = response.sys
                 self.temperature = response.main
+                self.weather = response.weather
+                
                 self.isLoading = false
             } catch {
                 // Perform UI updates directly (no need for additional Task) because of @MainActor

@@ -17,8 +17,8 @@ final class APIService {
     private var currentWeatherURL: URL? {
         var components = URLComponents(string: baseURL)
         components?.queryItems = [
-            URLQueryItem(name: "lat", value: "37.7749"),
-            URLQueryItem(name: "lon", value: "122.4194"),
+            URLQueryItem(name: "q", value: "Buenos Aires,ar"),
+            URLQueryItem(name: "units", value: "metric"),
             URLQueryItem(name: "appid", value: apiKey)
         ]
         return components?.url
@@ -32,8 +32,6 @@ final class APIService {
         }
         
         let (data, response) = try await URLSession.shared.data(from: url)
-        
-//        print(String(data: data, encoding: .utf8) ?? "Unable to convert data to string")
         
         guard let httpResponse = response as? HTTPURLResponse, (200..<300).contains(httpResponse.statusCode) else {
             throw ErrorService.invalidResponse
