@@ -14,7 +14,7 @@ struct WeatherView: View {
     var body: some View {
         ZStack {
             ContainerRelativeShape()
-                .fill(Color.blue.gradient)
+                .fill(viewModel.backgroundColor())
                 .ignoresSafeArea()
             
             VStack (spacing: 32) {

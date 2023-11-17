@@ -38,5 +38,20 @@ final class WeatherViewModel: ObservableObject {
             }
         }
     }
+    
+    func backgroundColor() -> AnyGradient {
+            guard let weatherMain = self.weather.first?.main else {
+                return Color.blue.gradient // Default color
+            }
+
+            switch WeatherIcon(rawValue: weatherMain) {
+            case .clear, .clouds, .drizzle:
+                return Color.blue.gradient
+            case .rain, .snow, .thunderstorm:
+                return Color.gray.gradient
+            default:
+                return Color.blue.gradient // Default color
+            }
+        }
 }
 
