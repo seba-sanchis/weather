@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct WeatherView: View {
+    
+    @StateObject var viewModel = WeatherViewModel()
+    
     var body: some View {
         ZStack {
             ContainerRelativeShape()
@@ -21,15 +24,20 @@ struct WeatherView: View {
                     .padding()
                 
                 VStack {
-                    Image(systemName: "cloud.sun.fill")
+                    Image(systemName: WeatherIcon(rawValue: viewModel.weather.first?.main ?? "").rawValue)
                         .renderingMode(.original)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 192)
                     
-                    Text("72°")
+                    Text("\(viewModel.temperature?.temp ?? 0)°")
                         .font(.system(size: 56))
                         .foregroundColor(.white)
+                    
+                    Text("\(viewModel.weather.first?.description ?? "")")
+                        .font(.system(size: 32))
+                        .foregroundColor(.white)
+                    
                 }
                 
                 HStack (spacing: 16) {
@@ -48,11 +56,31 @@ struct WeatherView: View {
                 .cornerRadius(8)
             }
         }
+        .task {
+            viewModel.getWeather()
+        }
     }
 }
 
 #Preview {
     WeatherView()
+}
+
+enum WeatherIcon: String {
+    case rain = "cloud.rain.fill"
+    case clouds = "cloud.fill"
+    case unknown = "questionmark.circle.fill"
+
+    init(rawValue: String) {
+        switch rawValue {
+        case "Clouds":
+            self = .clouds
+        case "Rain":
+            self = .rain
+        default:
+            self = .unknown
+        }
+    }
 }
 
 struct WeatherDayView: View {
